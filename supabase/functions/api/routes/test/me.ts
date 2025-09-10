@@ -1,6 +1,6 @@
 import { Hono } from "hono"
 import { createClient } from "jsr:@supabase/supabase-js@2"
-import { authMiddleware } from "../middleware/auth.ts"
+import { authMiddleware } from "../../middleware/auth.ts"
 
 interface User {
   id: string
