@@ -14,8 +14,14 @@ $ npm install
 # DB/認証/ストレージ等の起動
 $ npx supabase start
 
+# ダッシュボードを開く
+$ open http://127.0.0.1:54323
+
 # 関数の起動（ホットリロード有効）
 $ npx supabase functions serve
+
+# DBマイグレーションの実行
+$ npx supabase migration up
 
 # リクエスト(匿名ユーザ)
 $ curl -i --location --request GET 'http://127.0.0.1:54321/functions/v1/api/hello?name=Kazukichi' --header 'Authorization: Bearer <ANON_KEY>'
