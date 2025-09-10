@@ -30,19 +30,16 @@ $ curl -i --location --request GET 'http://127.0.0.1:54321/functions/v1/api/hell
 $ npx supabase stop
 ```
 
-## 本番環境へのデプロイ
+## 本番環境での動作確認
 
 ```bash
 # Supabaseにログイン
 $ npx supabase login
 
-# 本番環境へのデプロイ
-$ npx supabase functions deploy <FUNC_NAME>
-
-# プロジェクトへの参照を取得
+# プロジェクトへの参照の確認
 $ npx supabase projects list
 
-# 本番環境のAPIキー取得
+# 本番環境のanon keyの確認
 $ npx supabase projects api-keys --project-ref <PROJECT_REF>
 
 # 本番環境での動作確認
