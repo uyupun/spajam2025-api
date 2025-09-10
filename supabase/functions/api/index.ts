@@ -6,21 +6,10 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 
 import { Hono } from "hono"
+import { apiRouter } from "./routes/index.ts"
 
 const app = new Hono()
 
-// APIルーターを作成
-const apiRouter = new Hono()
-
-// Hello エンドポイント
-apiRouter.get("/hello", (c) => {
-  const name = c.req.query("name") || "World"
-  return c.json({
-    message: `Hello, ${name}!`,
-  })
-})
-
-// /api パスでAPIルーターをグルーピング
 app.route("/api", apiRouter)
 
 console.log("Hono API server starting...")
