@@ -24,7 +24,7 @@ $ curl -i --location --request GET 'http://127.0.0.1:54321/functions/v1/api/hell
 $ npx supabase stop
 ```
 
-## 本番環境へのデプロイと動作確認
+## 本番環境へのデプロイ
 
 ```bash
 # Supabaseにログイン
