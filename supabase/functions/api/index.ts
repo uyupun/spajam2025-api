@@ -9,13 +9,19 @@ import { Hono } from "hono"
 
 const app = new Hono()
 
+// APIルーターを作成
+const apiRouter = new Hono()
+
 // Hello エンドポイント
-app.get("/api/hello", (c) => {
+apiRouter.get("/hello", (c) => {
   const name = c.req.query("name") || "World"
   return c.json({
     message: `Hello, ${name}!`,
   })
 })
+
+// /api パスでAPIルーターをグルーピング
+app.route("/api", apiRouter)
 
 console.log("Hono API server starting...")
 
