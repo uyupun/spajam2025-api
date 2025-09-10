@@ -12,16 +12,14 @@ interface Variables {
   supabase: ReturnType<typeof createClient>
 }
 
-const authHelloRouter = new Hono<{ Variables: Variables }>()
+const meRouter = new Hono<{ Variables: Variables }>()
 
-authHelloRouter.use("/*", authMiddleware)
+meRouter.use("/*", authMiddleware)
 
-authHelloRouter.get("/", (c) => {
+meRouter.get("/", (c) => {
   const user = c.get("user")
-  const name = c.req.query("name") || user?.email || "Authenticated User"
 
   return c.json({
-    message: `Hello, ${name}!`,
     user: {
       id: user?.id,
       email: user?.email,
@@ -29,4 +27,4 @@ authHelloRouter.get("/", (c) => {
   })
 })
 
-export { authHelloRouter }
+export { meRouter }

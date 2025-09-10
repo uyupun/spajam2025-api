@@ -1,7 +1,7 @@
 import { Hono } from "hono"
 import { createClient } from "jsr:@supabase/supabase-js@2"
 
-const randomHelloRouter = new Hono()
+const greetRouter = new Hono()
 
 // Supabaseクライアントを作成
 const createSupabaseClient = () => {
@@ -11,9 +11,7 @@ const createSupabaseClient = () => {
   )
 }
 
-randomHelloRouter.get("/", async (c) => {
-  const name = c.req.query("name") || "World"
-
+greetRouter.get("/", async (c) => {
   const supabase = createSupabaseClient()
 
   // DBから挨拶を取得
@@ -26,8 +24,8 @@ randomHelloRouter.get("/", async (c) => {
   const randomGreeting = greetings![randomIndex]
 
   return c.json({
-    message: `${randomGreeting.message}, ${name}!`
+    message: randomGreeting.message
   })
 })
 
-export { randomHelloRouter }
+export { greetRouter }
