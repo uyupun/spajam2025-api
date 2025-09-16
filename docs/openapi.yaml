@@ -465,16 +465,16 @@ components:
       type: apiKey
       in: header
       name: apikey
-      description: "apiKey: <ANON_KEY>"
+      description: "apiKey: {ANON_KEY}"
     anonKey:
       type: http
       scheme: bearer
-      description: "Authorization: Bearer <ANON_KEY>"
+      description: "Authorization: Bearer {ANON_KEY}"
     accessToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: "Authorization: Bearer <ACCESS_TOKEN>"
+      description: "Authorization: Bearer {ACCESS_TOKEN}"
 
 tags:
   - name: Auth
