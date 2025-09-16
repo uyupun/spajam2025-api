@@ -26,13 +26,13 @@ jobs:
         with:
           node-version: '22.18.0'
 
-      - name: Install redoc-cli
-        run: npm install -g redoc-cli
+      - name: Install Redocly CLI
+        run: npm install -g @redocly/cli
 
       - name: Build documentation
         run: |
           mkdir -p dist
-          redoc-cli build docs/openapi.yaml --output dist/index.html
+          redocly build-docs docs/openapi.yaml --output dist/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

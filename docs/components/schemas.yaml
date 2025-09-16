@@ -1,0 +1,16 @@
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: apikey
+      description: "apiKey: {ANON_KEY}"
+    anonKey:
+      type: http
+      scheme: bearer
+      description: "Authorization: Bearer {ANON_KEY}"
+    accessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Authorization: Bearer {ACCESS_TOKEN}"

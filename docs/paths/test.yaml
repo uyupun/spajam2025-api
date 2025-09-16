@@ -1,0 +1,91 @@
+ping:
+  get:
+    summary: 認証なし接続確認
+    description: 認証なしの接続確認用エンドポイント
+    tags:
+      - Test
+    security:
+      - anonKey: []
+    responses:
+      '200':
+        description: 成功レスポンス
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "pong"
+              required:
+                - message
+
+greet:
+  get:
+    summary: 認証なしDB問い合わせあり接続確認
+    description: 認証なし、DB問い合わせありの接続確認用エンドポイント（データベースからランダムな挨拶メッセージを取得）
+    tags:
+      - Test
+    security:
+      - anonKey: []
+    responses:
+      '200':
+        description: 挨拶メッセージ
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: ランダムに選択された挨拶メッセージ
+                  example: "こんにちは！"
+              required:
+                - message
+
+me:
+  get:
+    summary: 認証あり接続確認
+    description: 認証ありの接続確認用エンドポイント（認証されたユーザの情報を返す）
+    tags:
+      - Test
+    security:
+      - accessToken: []
+    responses:
+      '200':
+        description: ユーザ情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ユーザID
+                      example: "123e4567-e89b-12d3-a456-426614174000"
+                    email:
+                      type: string
+                      format: email
+                      description: ユーザのメールアドレス
+                      example: "user@example.com"
+                  required:
+                    - id
+                    - email
+              required:
+                - user
+      '401':
+        description: 認証エラー
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: エラーメッセージ
+                  example: "Authentication failed"
+              required:
+                - error
