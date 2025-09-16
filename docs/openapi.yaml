@@ -1,0 +1,473 @@
+openapi: 3.1.1
+info:
+  title: SPAJAM 2025 API
+  description: SPAJAM 2025プロジェクトのAPI仕様書
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:54321/functions/v1/api
+    description: ローカル開発環境
+  - url: https://your-project.supabase.co/functions/v1/api
+    description: 本番環境
+
+paths:
+  /auth/signup:
+    post:
+      summary: ユーザー登録
+      description: 新規ユーザーアカウントを作成
+      tags:
+        - Auth
+      security:
+        - apiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: ユーザーのメールアドレス
+                  example: "user@example.com"
+                password:
+                  type: string
+                  description: パスワード
+                  example: "password123"
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: 登録成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: JWTアクセストークン
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  token_type:
+                    type: string
+                    example: "bearer"
+                  expires_in:
+                    type: integer
+                    description: トークンの有効期限（秒）
+                    example: 3600
+                  expires_at:
+                    type: integer
+                    description: トークンの有効期限（Unix timestamp）
+                    example: 1758013496
+                  refresh_token:
+                    type: string
+                    description: リフレッシュトークン
+                    example: "42c5rljcaysp"
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "019eb980-7b07-4096-a2a4-eedfaa82993f"
+                      aud:
+                        type: string
+                        example: "authenticated"
+                      role:
+                        type: string
+                        example: "authenticated"
+                      email:
+                        type: string
+                        example: "testaaa@example.com"
+                      email_confirmed_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-16T08:04:56.058716255Z"
+                      phone:
+                        type: string
+                        example: ""
+                      last_sign_in_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-16T08:04:56.062900736Z"
+                      app_metadata:
+                        type: object
+                        properties:
+                          provider:
+                            type: string
+                            example: "email"
+                          providers:
+                            type: array
+                            items:
+                              type: string
+                            example: ["email"]
+                      user_metadata:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: "test@example.com"
+                          email_verified:
+                            type: boolean
+                            example: true
+                          phone_verified:
+                            type: boolean
+                            example: false
+                          sub:
+                            type: string
+                            example: "019eb980-7b07-4096-a2a4-eedfaa82993f"
+                      identities:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identity_id:
+                              type: string
+                              example: "3fc64997-3621-4db0-941c-81ff113cb0b3"
+                            id:
+                              type: string
+                              example: "019eb980-7b07-4096-a2a4-eedfaa82993f"
+                            user_id:
+                              type: string
+                              example: "019eb980-7b07-4096-a2a4-eedfaa82993f"
+                            provider:
+                              type: string
+                              example: "email"
+                            last_sign_in_at:
+                              type: string
+                              format: date-time
+                              example: "2025-09-16T08:04:56.054454023Z"
+                            created_at:
+                              type: string
+                              format: date-time
+                              example: "2025-09-16T08:04:56.054484Z"
+                            updated_at:
+                              type: string
+                              format: date-time
+                              example: "2025-09-16T08:04:56.054484Z"
+                            email:
+                              type: string
+                              example: "testaaa@example.com"
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-16T08:04:56.032741Z"
+                      updated_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-16T08:04:56.066188Z"
+                      is_anonymous:
+                        type: boolean
+                        example: false
+        '422':
+          description: 登録エラー（重複メールアドレスなど）
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 422
+                  error_code:
+                    type: string
+                    example: "user_already_exists"
+                  msg:
+                    type: string
+                    example: "User already registered"
+                required:
+                  - code
+                  - error_code
+                  - msg
+
+  /auth/token:
+    post:
+      summary: ユーザーログイン
+      description: 既存ユーザーでログイン
+      tags:
+        - Auth
+      security:
+        - apiKey: []
+      parameters:
+        - name: grant_type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [password]
+          description: 認証タイプ
+          example: "password"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: ユーザーのメールアドレス
+                  example: "test@example.com"
+                password:
+                  type: string
+                  description: パスワード
+                  example: "password123"
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: JWTアクセストークン
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  token_type:
+                    type: string
+                    example: "bearer"
+                  expires_in:
+                    type: integer
+                    description: トークンの有効期限（秒）
+                    example: 3600
+                  expires_at:
+                    type: integer
+                    description: トークンの有効期限（Unix timestamp）
+                    example: 1758013872
+                  refresh_token:
+                    type: string
+                    description: リフレッシュトークン
+                    example: "aoxiuchy5ld4"
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "8cd59145-725b-4eae-9537-b7c29851aa66"
+                      aud:
+                        type: string
+                        example: "authenticated"
+                      role:
+                        type: string
+                        example: "authenticated"
+                      email:
+                        type: string
+                        example: "test@example.com"
+                      email_confirmed_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-10T18:51:23.715763Z"
+                      phone:
+                        type: string
+                        example: ""
+                      confirmed_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-10T18:51:23.715763Z"
+                      last_sign_in_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-16T08:11:12.48347775Z"
+                      app_metadata:
+                        type: object
+                        properties:
+                          provider:
+                            type: string
+                            example: "email"
+                          providers:
+                            type: array
+                            items:
+                              type: string
+                            example: ["email"]
+                      user_metadata:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: "test@example.com"
+                          email_verified:
+                            type: boolean
+                            example: true
+                          phone_verified:
+                            type: boolean
+                            example: false
+                          sub:
+                            type: string
+                            example: "8cd59145-725b-4eae-9537-b7c29851aa66"
+                      identities:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identity_id:
+                              type: string
+                              example: "c7a64d62-07b6-4074-8ffa-356de16905b4"
+                            id:
+                              type: string
+                              example: "8cd59145-725b-4eae-9537-b7c29851aa66"
+                            user_id:
+                              type: string
+                              example: "8cd59145-725b-4eae-9537-b7c29851aa66"
+                            provider:
+                              type: string
+                              example: "email"
+                            last_sign_in_at:
+                              type: string
+                              format: date-time
+                              example: "2025-09-10T18:51:23.713492Z"
+                            created_at:
+                              type: string
+                              format: date-time
+                              example: "2025-09-10T18:51:23.713515Z"
+                            updated_at:
+                              type: string
+                              format: date-time
+                              example: "2025-09-10T18:51:23.713515Z"
+                            email:
+                              type: string
+                              example: "test@example.com"
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-10T18:51:23.703962Z"
+                      updated_at:
+                        type: string
+                        format: date-time
+                        example: "2025-09-16T08:11:12.486027Z"
+                      is_anonymous:
+                        type: boolean
+                        example: false
+                  weak_password:
+                    type: string
+                    nullable: true
+                    example: null
+        '401':
+          description: ログインエラー
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid login credentials"
+
+  /test/ping:
+    get:
+      summary: 認証なし接続確認
+      description: 認証なしの接続確認用エンドポイント
+      tags:
+        - Test
+      security:
+        - anonKey: []
+      responses:
+        '200':
+          description: 成功レスポンス
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "pong"
+                required:
+                  - message
+
+  /test/greet:
+    get:
+      summary: 認証なしDB問い合わせあり接続確認
+      description: 認証なし、DB問い合わせありの接続確認用エンドポイント（データベースからランダムな挨拶メッセージを取得）
+      tags:
+        - Test
+      security:
+        - anonKey: []
+      responses:
+        '200':
+          description: 挨拶メッセージ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: ランダムに選択された挨拶メッセージ
+                    example: "こんにちは！"
+                required:
+                  - message
+
+  /test/me:
+    get:
+      summary: 認証あり接続確認
+      description: 認証ありの接続確認用エンドポイント（認証されたユーザーの情報を返す）
+      tags:
+        - Test
+      security:
+        - accessToken: []
+      responses:
+        '200':
+          description: ユーザー情報
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ユーザーID
+                        example: "123e4567-e89b-12d3-a456-426614174000"
+                      email:
+                        type: string
+                        format: email
+                        description: ユーザーのメールアドレス
+                        example: "user@example.com"
+                    required:
+                      - id
+                      - email
+                required:
+                  - user
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: エラーメッセージ
+                    example: "Authentication failed"
+                required:
+                  - error
+
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: apikey
+      description: Supabase anon key
+    anonKey:
+      type: http
+      scheme: bearer
+      description: "Authorization: Bearer {ANON_KEY}"
+    accessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Authorization: Bearer {ACCESS_TOKEN}"
+
+tags:
+  - name: Auth
+    description: 認証関連の操作
+  - name: Test
+    description: テスト用エンドポイント
