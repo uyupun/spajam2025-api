@@ -67,3 +67,7 @@ $ curl -i --location --request POST 'http://127.0.0.1:54321/auth/v1/token?grant_
 # 正当なトークンでの認証必須エンドポイントへのアクセス
 $ curl -i --location --request GET 'http://127.0.0.1:54321/functions/v1/api/test/me' --header 'Authorization: Bearer <ACCESS_TOKEN>'
 ```
+
+## リンク
+
+- [Redoc](https://uyupun.github.io/spajam2025-api/)
